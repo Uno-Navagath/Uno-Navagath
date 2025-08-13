@@ -1,20 +1,26 @@
 // app/page.tsx
 'use client';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Header from './_components/Header';
 import Leaderboard from './_components/Leaderboard';
 import AddPlayerCard from './_components/AddPlayerCard';
 import CreateGameDialog from './_components/CreateGameDialog';
 import ActiveGameCard from './_components/ActiveGameCard';
-import { usePlayers, useActiveGame } from '@/lib/hooks';
+import {useActiveGame, usePlayers} from '@/lib/hooks';
+import confetti from "canvas-confetti";
+import {getPlayer} from "@/models/player";
+import {WinnerDialog} from "@/app/(home)/_components/WinnerDialog";
+import {toast} from "sonner";
+import GameHistory from "@/app/(home)/_components/GameHistory";
 
 export default function HomePage() {
-    const { players, loading } = usePlayers();
-    const { activeGame, createGame, addRound, endGame } = useActiveGame();
+    const {players, loading} = usePlayers();
+    const {activeGame, createGame, addRound, endGame, removeGame} = useActiveGame();
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
-    const [roundInputs, setRoundInputs] = useState<Record<string,string>>({});
+    const [roundInputs, setRoundInputs] = useState<Record<string, string>>({});
+    const [winner, setWinner] = useState<string | null>(null);
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="inline-flex flex-col items-center gap-2">
@@ -46,15 +52,51 @@ export default function HomePage() {
 
     const handleEndGame = async () => {
         if (!activeGame) return alert('No active game');
+        if (activeGame) {
+            if (activeGame.rounds.length === 0) {
+                toast.info("No rounds to end. Game discarded.")
+                await removeGame(activeGame.id);
+                return;
+            }
+            const totals: Record<string, number> = {};
+
+            for (const round of activeGame.rounds) {
+                for (const [pid, score] of Object.entries(round.scores)) {
+                    totals[pid] = (totals[pid] || 0) + (score as number);
+                }
+            }
+
+            const winnerId = Object.entries(totals)
+                .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)[0]?.[0];
+
+            const winnerName = (await getPlayer(winnerId)).data?.name || "Unknown";
+            setWinner(winnerName);
+            // Confetti burst
+            confetti({
+                particleCount: 200,
+                spread: 70,
+                origin: {y: 0.6}
+            });
+        }
         const res = await endGame(activeGame.id);
         if (!res.success) alert(res.error ?? 'Failed to end game');
     };
 
     return (
         <div className="min-h-screen bg-background text-foreground p-4 max-w-md mx-auto">
-            <Header />
+            <Header/>
+            {!activeGame && (
 
-            <Leaderboard players={players} />
+                <CreateGameDialog
+                    players={players}
+                    selected={selectedPlayers}
+                    setSelected={setSelectedPlayers}
+                    open={dialogOpen}
+                    setOpen={setDialogOpen}
+                    onCreate={handleCreateGame}
+                />
+            )}
+            <Leaderboard players={players}/>
 
             {activeGame ? (
                 <ActiveGameCard
@@ -67,18 +109,12 @@ export default function HomePage() {
                 />
             ) : (
                 <>
-                    <AddPlayerCard />
-                    <CreateGameDialog
-                        players={players}
-                        selected={selectedPlayers}
-                        setSelected={setSelectedPlayers}
-                        open={dialogOpen}
-                        setOpen={setDialogOpen}
-                        onCreate={handleCreateGame}
-                    />
+                    <AddPlayerCard/>
+                    <GameHistory/>
                 </>
             )}
-            <div className="h-28" />
+            <div className="h-28"/>
+            <WinnerDialog winner={winner} onClose={() => setWinner(null)}/>
         </div>
     );
 }

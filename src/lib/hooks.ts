@@ -1,8 +1,15 @@
 // lib/hooks.ts
 'use client';
-import { useEffect, useState, useCallback } from 'react';
-import { Player, subscribeToPlayers as subPlayers } from '@/models/player';
-import { Game, subscribeToActiveGame as subActiveGame, createGame as createGameModel, addRoundToGame as addRoundModel, endGameAndSetPlayerTotals as endGameModel } from '@/models/game';
+import {useCallback, useEffect, useState} from 'react';
+import {Player, subscribeToPlayers as subPlayers} from '@/models/player';
+import {
+    addRoundToGame as addRoundModel,
+    createGame as createGameModel,
+    deleteGame,
+    endGameAndSetPlayerTotals as endGameModel,
+    Game,
+    subscribeToActiveGame as subActiveGame
+} from '@/models/game';
 
 export function usePlayers() {
     const [players, setPlayers] = useState<Player[]>([]);
@@ -18,7 +25,7 @@ export function usePlayers() {
     }, []);
 
 
-    return { players, loading };
+    return {players, loading};
 }
 
 export function useActiveGame() {
@@ -43,8 +50,12 @@ export function useActiveGame() {
     }, []);
 
     const endGame = useCallback(async (gameId: string) => {
+
         return await endGameModel(gameId);
     }, []);
+    const removeGame = useCallback(async (gameId: string) => {
+        return await deleteGame(gameId);
+    }, []);
 
-    return { activeGame, loading, createGame, addRound, endGame };
+    return {activeGame, loading, createGame, addRound, endGame, removeGame};
 }

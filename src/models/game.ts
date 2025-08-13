@@ -174,6 +174,23 @@ export const getGame = async (
 };
 
 /**
+ * One-time fetch for a game
+ */
+export const getGames = async (): Promise<OperationResult<Game[]>> => {
+    try {
+        const games = await gameCollection.getAll();
+        return games
+            ? {success: true, data: games}
+            : {success: true, data: []};
+    } catch (error) {
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+        };
+    }
+};
+
+/**
  * Delete a game
  */
 export const deleteGame = async (
