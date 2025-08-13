@@ -10,7 +10,7 @@ export default function AllGamesPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filterStatus, setFilterStatus] = useState<"all" | "active" | "finished">("all");
+    const [filterStatus, setFilterStatus] = useState<string>("all");
 
     const { players } = usePlayers();
 
@@ -71,7 +71,7 @@ export default function AllGamesPage() {
                         <button
                             key={status}
                             className={`px-3 py-1 rounded-full border ${filterStatus === status ? "bg-primary text-white" : "bg-card"}`}
-                            onClick={() => setFilterStatus(status as any)}
+                            onClick={() => setFilterStatus(status)}
                         >
                             {status.charAt(0).toUpperCase() + status.slice(1)}
                         </button>
