@@ -8,10 +8,11 @@ import CreateGameDialog from './_components/CreateGameDialog';
 import ActiveGameCard from './_components/ActiveGameCard';
 import {useActiveGame, usePlayers} from '@/lib/hooks';
 import confetti from "canvas-confetti";
-import {getPlayer} from "@/models/player";
+import {getPlayer, Player} from "@/models/player";
 import {WinnerDialog} from "@/app/(home)/_components/WinnerDialog";
 import {toast} from "sonner";
-import GameHistory from "@/app/(home)/_components/GameHistory";
+import RecentGames from "@/app/(home)/_components/RecentGames";
+import EditPlayerDialog from "@/app/(home)/_components/EditPlayerDialog";
 
 export default function HomePage() {
     const {players, loading} = usePlayers();
@@ -21,6 +22,9 @@ export default function HomePage() {
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
     const [roundInputs, setRoundInputs] = useState<Record<string, string>>({});
     const [winner, setWinner] = useState<string | null>(null);
+
+    const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
+
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="inline-flex flex-col items-center gap-2">
@@ -92,11 +96,20 @@ export default function HomePage() {
                     selected={selectedPlayers}
                     setSelected={setSelectedPlayers}
                     open={dialogOpen}
-                    setOpen={setDialogOpen}
+                    setOpen={(open)=>{
+                        setDialogOpen(open);
+                        setSelectedPlayers([]);
+                    }}
                     onCreate={handleCreateGame}
                 />
             )}
-            <Leaderboard players={players}/>
+
+            <Leaderboard
+                players={players}
+                onPlayerClick={(player) => {
+                    setEditingPlayer(player);
+                }}
+            />
 
             {activeGame ? (
                 <ActiveGameCard
@@ -110,11 +123,17 @@ export default function HomePage() {
             ) : (
                 <>
                     <AddPlayerCard/>
-                    <GameHistory/>
+                    <RecentGames/>
                 </>
             )}
             <div className="h-28"/>
             <WinnerDialog winner={winner} onClose={() => setWinner(null)}/>
+
+            <EditPlayerDialog
+                open={editingPlayer !== null}
+                onClose={() => setEditingPlayer(null)}
+                player={editingPlayer}
+            />
         </div>
     );
 }

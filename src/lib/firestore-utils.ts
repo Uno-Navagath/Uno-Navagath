@@ -1,17 +1,16 @@
 import {
-    Firestore,
     collection,
+    deleteDoc,
     doc,
+    Firestore,
     getDoc,
     getDocs,
-    addDoc,
-    updateDoc,
-    deleteDoc,
     onSnapshot,
+    orderBy,
     query,
-    where,
     QueryConstraint,
-    DocumentData, setDoc
+    setDoc,
+    updateDoc
 } from "firebase/firestore";
 
 /**
@@ -36,8 +35,14 @@ export const firestoreUtils = <T extends { id?: string }>(db: Firestore, collect
             return docSnap.exists() ? ({id: docSnap.id, ...docSnap.data()} as T) : null;
         },
 
-        async getAll(): Promise<T[]> {
-            const querySnap = await getDocs(colRef);
+        async getAll(
+            order?: { field: string; direction?: "asc" | "desc" }
+        ): Promise<T[]> {
+            const q = order
+                ? query(colRef, orderBy(order.field, order.direction ?? "asc"))
+                : colRef;
+
+            const querySnap = await getDocs(q);
             return querySnap.docs.map(doc => ({id: doc.id, ...doc.data()} as T));
         },
 

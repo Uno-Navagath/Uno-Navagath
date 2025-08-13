@@ -178,7 +178,7 @@ export const getGame = async (
  */
 export const getGames = async (): Promise<OperationResult<Game[]>> => {
     try {
-        const games = await gameCollection.getAll();
+        const games = await gameCollection.getAll({ field: "updatedAt", direction: "desc" });
         return games
             ? {success: true, data: games}
             : {success: true, data: []};
