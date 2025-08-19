@@ -3,16 +3,16 @@
 import {useEffect, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Card} from "@/components/ui/card";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
 import {addPlayer, getGameDetails} from "@/lib/database/actions/game";
 import {getPlayers} from "@/lib/database/actions/player";
+import {UserAvatar} from "@/components/user-avatar";
 
 type Player = {
     id: string;
     name: string;
-    avatarUrl?: string | null;
+    avatarUrl: string | null;
 };
 
 type AddPlayersButtonProps = {
@@ -94,10 +94,7 @@ export function AddPlayersButton({gameId}: AddPlayersButtonProps) {
                                 } ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={() => toggleSelect(p.id)}
                             >
-                                <Avatar className="h-8 w-8">
-                                    {p.avatarUrl ? <AvatarImage src={p.avatarUrl}/> :
-                                        <AvatarFallback>{p.name.slice(0, 2).toUpperCase()}</AvatarFallback>}
-                                </Avatar>
+                                <UserAvatar imageUrl={p.avatarUrl} className="h-8 w-8"/>
                                 <span className="flex-1">{p.name}</span>
                                 {isSelected && !isDisabled && <span>✓</span>}
                                 {isDisabled && <span>Already in game</span>}

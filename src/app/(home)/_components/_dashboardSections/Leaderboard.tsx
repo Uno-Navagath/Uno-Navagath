@@ -1,7 +1,7 @@
 'use client'
 import {FiTrendingUp} from "react-icons/fi";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Crown} from "lucide-react";
+import {UserAvatar} from "@/components/user-avatar";
 
 export type LeaderboardPlayer = {
     id: string;
@@ -14,13 +14,6 @@ export type LeaderboardPlayer = {
     streak: number;
 };
 
-const medalColor = (rank: number) =>
-    rank === 1 ? "bg-yellow-400 text-yellow-950"
-        : rank === 2 ? "bg-gray-300 text-gray-800"
-            : rank === 3 ? "bg-amber-700/90 text-amber-50"
-                : "bg-gray-100 text-gray-600";
-
-
 function PlayerCard({player, rank}: { player: LeaderboardPlayer; rank: number }) {
     console.log("Avatar of ", player.name, player.avatarUrl)
     return (
@@ -29,15 +22,7 @@ function PlayerCard({player, rank}: { player: LeaderboardPlayer; rank: number })
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     {/* Avatar */}
-                    <Avatar>
-                        {(player.avatarUrl || player.avatarUrl?.length === 0) ? (
-                            <AvatarImage src={player.avatarUrl} alt={player.name}/>
-                        ) : (
-                            <AvatarFallback>
-                                {player.name.slice(0, 2).toUpperCase()}
-                            </AvatarFallback>
-                        )}
-                    </Avatar>
+                    <UserAvatar imageUrl={(player.avatarUrl ?? "") as string}/>
                     <div>
                         <p className="font-semibold ">{player.name}</p>
                         <p className="text-xs ">

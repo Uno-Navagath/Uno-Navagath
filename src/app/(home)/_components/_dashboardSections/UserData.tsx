@@ -2,7 +2,6 @@
 
 import {useMemo} from "react";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Line} from "react-chartjs-2";
 import {
     CategoryScale,
@@ -17,6 +16,7 @@ import {
     TooltipItem,
 } from "chart.js";
 import {FiActivity, FiAward, FiHash, FiTarget, FiTrendingUp} from "react-icons/fi";
+import {UserAvatar} from "@/components/user-avatar";
 
 ChartJS.register(
     CategoryScale,
@@ -41,7 +41,7 @@ export default function UserData({
                                      player,
                                      analytics,
                                  }: {
-    player: { name: string; email?: string; avatarUrl?: string | null };
+    player: { name: string; email?: string; avatarUrl: string | null };
     analytics: Analytics;
 }) {
     const winRatePct = Math.round(analytics.winRate * 100);
@@ -121,15 +121,7 @@ export default function UserData({
             {/* Header: avatar + name + quick meta */}
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
-                    <Avatar className="h-12 w-12">
-                        {player.avatarUrl ? (
-                            <AvatarImage src={player.avatarUrl} alt={player.name}/>
-                        ) : (
-                            <AvatarFallback className="bg-indigo-600 text-white">
-                                {initials(player.name)}
-                            </AvatarFallback>
-                        )}
-                    </Avatar>
+                    <UserAvatar imageUrl={player.avatarUrl} className="h-12 w-12"/>
                     <div className="min-w-0">
                         <h2 className="truncate text-2xl font-bold tracking-tight">{player.name}</h2>
                         <p className="text-xs text-gray-500">

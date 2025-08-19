@@ -1,11 +1,11 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Button} from "@/components/ui/button";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {getRecentGames} from "@/lib/database/actions/game";
 import Link from "next/link";
+import {UserAvatar} from "@/components/user-avatar";
 
 type GamePlayer = {
     playerId: string;
@@ -95,13 +95,7 @@ export default function RecentGames() {
                             <div className="flex flex-wrap items-center gap-4">
                                 {g.players.map((p) => (
                                     <div key={p.playerId} className="flex items-center gap-2">
-                                        <Avatar className="h-8 w-8">
-                                            {p.playerAvatar ? (
-                                                <AvatarImage src={p.playerAvatar}/>
-                                            ) : (
-                                                <AvatarFallback>{initials(p.playerName)}</AvatarFallback>
-                                            )}
-                                        </Avatar>
+                                        <UserAvatar imageUrl={p.playerAvatar} className="h-8 w-8"/>
                                         <div className="text-sm">
                                             <p className="font-medium">{p.playerName}</p>
                                             <p className="text-xs text-gray-500">

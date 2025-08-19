@@ -39,11 +39,9 @@ export default async function GameListPage() {
                                 {/* Status */}
                                 <span
                                     className={`px-2 py-1 rounded text-sm ${
-                                        game.status === "waiting"
-                                            ? "bg-yellow-100 text-yellow-800"
-                                            : game.status === "active"
-                                                ? "bg-green-100 text-green-800"
-                                                : "bg-gray-100 text-gray-800"
+                                        game.status === "active"
+                                            ? "bg-green-100 text-green-800"
+                                            : "bg-gray-100 text-gray-800"
                                     }`}
                                 >
                                     {game.status.charAt(0).toUpperCase() + game.status.slice(1)}

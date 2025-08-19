@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { createClient } from "@/lib/supabase/client";
+import {useEffect, useState} from "react";
+import {Button} from "@/components/ui/button";
+import {Card} from "@/components/ui/card";
+import {Label} from "@/components/ui/label";
+import {Checkbox} from "@/components/ui/checkbox";
+import {createClient} from "@/lib/supabase/client";
 import {getPlayers} from "@/lib/database/actions/player";
 import {createGame} from "@/lib/database/actions/game";
+import {UserAvatar} from "@/components/user-avatar";
 
 type Player = {
     id: string;
@@ -27,7 +27,7 @@ export default function CreateGamePage() {
         async function fetchData() {
             const supabase = createClient();
             const {
-                data: { user },
+                data: {user},
             } = await supabase.auth.getUser();
 
             if (!user) return; // not logged in
@@ -54,7 +54,7 @@ export default function CreateGamePage() {
     };
 
     const handleSubmit = async () => {
-        await createGame({ hostId, playerIds: selectedPlayers });
+        await createGame({hostId, playerIds: selectedPlayers});
     };
 
     const initials = (name: string) =>
@@ -82,13 +82,7 @@ export default function CreateGamePage() {
                                 onCheckedChange={() => togglePlayer(p.id)}
                                 disabled={p.id === hostId} // host locked
                             />
-                            <Avatar className="h-8 w-8">
-                                {p.avatarUrl ? (
-                                    <AvatarImage src={p.avatarUrl} />
-                                ) : (
-                                    <AvatarFallback>{initials(p.name)}</AvatarFallback>
-                                )}
-                            </Avatar>
+                            <UserAvatar imageUrl={p.avatarUrl} className="h-8 w-8"/>
                             <span>
                 {p.name}{" "}
                                 {p.id === hostId && (

@@ -4,6 +4,7 @@ import {useState} from "react";
 import {Menu, Moon, Sun, X} from "lucide-react";
 import LogoutButton from "@/components/logout-button";
 import {User} from "@supabase/supabase-js";
+import {UserAvatar} from "@/components/user-avatar";
 
 export default function DashboardHeader({user}: { user: User }) {
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -47,11 +48,7 @@ export default function DashboardHeader({user}: { user: User }) {
                         <div className="relative group">
                             <button
                                 className="flex items-center space-x-2 rounded-full bg-gray-100 px-3 py-1 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                <img
-                                    src={user?.user_metadata?.avatar_url || "/default-avatar.png"}
-                                    alt="avatar"
-                                    className="h-8 w-8 rounded-full"
-                                />
+                                <UserAvatar imageUrl={user?.user_metadata?.avatar_url}/>
                                 <span className="hidden sm:inline text-sm font-medium text-gray-700 dark:text-gray-200">
                   {user?.email}
                 </span>

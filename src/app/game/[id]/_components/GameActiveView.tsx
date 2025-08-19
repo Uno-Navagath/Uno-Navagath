@@ -3,21 +3,22 @@
 import {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Card} from "@/components/ui/card";
-import {Input} from "@/components/ui/input";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {addRoundScores, discardGame, endGame, removePlayer,} from "@/lib/database/actions/game";
-import {GamePlayers, Games, Rounds, Scores} from "@/database/schema";
+import {addRoundScores, discardGame, endGame, removePlayer} from "@/lib/database/actions/game";
 import {AddPlayersButton} from "@/app/game/[id]/_components/AddPlayersButton";
 import {PlayerScoreRow} from "@/app/game/[id]/_components/PlayerScoreRow";
+import {GamePlayers, Games, Players, Rounds, Scores} from "@/database/schema";
 
-interface GameActiveViewProps {
-    game: Games & {
-        players: (GamePlayers & { player: { id: string; name: string; avatarUrl?: string } })[];
-        rounds: (Rounds & { scores: (Scores & { player: { id: string; name: string } })[] })[];
-    };
-}
+// Game with players and rounds + nested scores + player
+export type GameDetails = Games & {
+    players: (GamePlayers & {
+        player: Players;
+    })[];
+    rounds: (Rounds & {
+        scores: (Scores & { player: Players })[];
+    })[];
+};
 
-export default function GameActiveView({game}: GameActiveViewProps) {
+export default function GameActiveView({game}: { game: GameDetails }) {
     const [scores, setScores] = useState<Record<string, number>>({});
 
     const handleScoreChange = (playerId: string, value: string) => {
@@ -56,12 +57,14 @@ export default function GameActiveView({game}: GameActiveViewProps) {
                             key={gp.player.id}
                             id={gp.player.id}
                             name={gp.player.name}
-                            avatarUrl={gp.player.avatarUrl}
+                            avatarUrl={gp.player.avatarUrl ?? ""}
                             isHost={!!gp.isHost}
                             totalScore={getTotalScore(gp.player.id)}
                             avgScore={getAverageScore(gp.player.id)}
                             value={scores[gp.player.id] ?? ""}
-                            onChange={(v) => setScores((prev) => ({ ...prev, [gp.player.id]: v }))}
+                            onChange={(v) =>
+                                setScores((prev) => ({...prev, [gp.player.id]: Number(v) || 0}))
+                            }
                             onRemove={() => removePlayer(game.id, gp.player.id)}
                         />
                     ))}
@@ -94,7 +97,10 @@ export default function GameActiveView({game}: GameActiveViewProps) {
                                             (s) => s.playerId === gp.player.id
                                         )?.score;
                                         return (
-                                            <td key={gp.player.id} className="border px-2 py-1 text-center">
+                                            <td
+                                                key={gp.player.id}
+                                                className="border px-2 py-1 text-center"
+                                            >
                                                 {score ?? "-"}
                                             </td>
                                         );

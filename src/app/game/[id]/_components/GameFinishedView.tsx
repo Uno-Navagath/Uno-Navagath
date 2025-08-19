@@ -1,11 +1,11 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {Card} from "@/components/ui/card";
+import {Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
+import {UserAvatar} from "@/components/user-avatar";
 
 
-export default function GameFinishedView({ game }: { game: any }) {
+export default function GameFinishedView({game}: { game: any }) {
     const winner = game.players.reduce(
         (prev: any, curr: any) =>
             curr.totalScore > prev.totalScore ? curr : prev,
@@ -23,15 +23,7 @@ export default function GameFinishedView({ game }: { game: any }) {
             {/* Winner */}
             <Card className="p-6 text-center">
                 <h2 className="text-xl font-bold mb-2">🏆 Winner</h2>
-                <Avatar className="h-16 w-16 mx-auto mb-2">
-                    {winner.player.avatarUrl ? (
-                        <AvatarImage src={winner.player.avatarUrl} />
-                    ) : (
-                        <AvatarFallback>
-                            {winner.player.name.slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                    )}
-                </Avatar>
+                <UserAvatar imageUrl={winner.player.avatarUrl} className="h-16 w-16 mx-auto mb-2"/>
                 <p className="text-lg font-semibold">{winner.player.name}</p>
                 <p className="text-muted-foreground">
                     Total Score: {winner.totalScore}
@@ -48,15 +40,7 @@ export default function GameFinishedView({ game }: { game: any }) {
                             className="flex justify-between items-center border-b py-2"
                         >
                             <div className="flex items-center gap-2">
-                                <Avatar className="h-8 w-8">
-                                    {gp.player.avatarUrl ? (
-                                        <AvatarImage src={gp.player.avatarUrl} />
-                                    ) : (
-                                        <AvatarFallback>
-                                            {gp.player.name.slice(0, 2).toUpperCase()}
-                                        </AvatarFallback>
-                                    )}
-                                </Avatar>
+                                <UserAvatar imageUrl={gp.player.avatarUrl} className="h-8 w-8"/>
                                 <span>{gp.player.name}</span>
                             </div>
                             <div className="flex gap-6 text-sm">
@@ -75,11 +59,11 @@ export default function GameFinishedView({ game }: { game: any }) {
                 <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={chartData}>
-                            <XAxis dataKey="name" />
-                            <YAxis />
-                            <Tooltip />
-                            <Bar dataKey="score" fill="#8884d8" />
-                            <Bar dataKey="avg" fill="#82ca9d" />
+                            <XAxis dataKey="name"/>
+                            <YAxis/>
+                            <Tooltip/>
+                            <Bar dataKey="score" fill="#8884d8"/>
+                            <Bar dataKey="avg" fill="#82ca9d"/>
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
