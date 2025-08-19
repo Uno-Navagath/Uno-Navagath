@@ -1,5 +1,5 @@
-import { firestoreUtils } from "@/lib/firestore-utils";
-import { db } from "@/lib/firebase";
+import { firestoreUtils } from "@/lib/firebase/firestore-utils";
+import { db } from "@/lib/firebase/firebase";
 import { OperationResult } from "@/models/operation-result";
 
 export interface Player {
@@ -26,7 +26,7 @@ export const subscribeToPlayers = (callback: (players: Player[]) => void) => {
 };
 
 /**
- * Create a new player
+ * Create a new player.ts
  */
 export const createPlayer = async (
     playerData: Omit<
@@ -70,7 +70,7 @@ export const getAllPlayers = async (): Promise<OperationResult<Player[]>> => {
 };
 
 /**
- * Get a single player by ID
+ * Get a single player.ts by ID
  */
 export const getPlayer = async (
     playerId: string
@@ -89,7 +89,7 @@ export const getPlayer = async (
 };
 
 /**
- * Update player data
+ * Update player.ts data
  */
 export const updatePlayer = async (
     playerId: string,
@@ -112,7 +112,7 @@ export const updatePlayer = async (
 };
 
 /**
- * Delete a player
+ * Delete a player.ts
  */
 export const deletePlayer = async (
     playerId: string

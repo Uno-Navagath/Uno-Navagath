@@ -1,5 +1,5 @@
-import {firestoreUtils} from "@/lib/firestore-utils";
-import {db} from "@/lib/firebase";
+import {firestoreUtils} from "@/lib/firebase/firestore-utils";
+import {db} from "@/lib/firebase/firebase";
 import {OperationResult} from "@/models/operation-result";
 import {getPlayer, updatePlayer} from "@/models/player";
 import {where} from "firebase/firestore";
@@ -11,7 +11,7 @@ export interface GameRound {
 
 export interface Game {
     id: string;
-    players: string[]; // player IDs
+    players: string[]; // player.ts IDs
     rounds: GameRound[];
     isActive: boolean;
     createdAt: Date;
@@ -101,7 +101,7 @@ export const addRoundToGame = async (
 };
 
 /**
- * End the game and update player totals
+ * End the game and update player.ts totals
  */
 export const endGameAndSetPlayerTotals = async (
     gameId: string
@@ -110,7 +110,7 @@ export const endGameAndSetPlayerTotals = async (
         const game = await gameCollection.getById(gameId);
         if (!game) return {success: false, error: "Game not found"};
 
-        // Calculate total points for each player
+        // Calculate total points for each player.ts
         const totals: Record<string, number> = {};
         for (const round of game.rounds) {
             for (const playerId of Object.keys(round.scores)) {
@@ -118,7 +118,7 @@ export const endGameAndSetPlayerTotals = async (
                     (totals[playerId] || 0) + round.scores[playerId];
             }
         }
-        // Update player stats
+        // Update player.ts stats
         for (const playerId of game.players) {
             const totalScoreToAdd = totals[playerId] || 0;
 

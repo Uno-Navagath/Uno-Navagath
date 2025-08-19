@@ -3,7 +3,7 @@
 import {useEffect, useState} from "react";
 import {Game, getGames} from "@/models/game";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {usePlayers} from "@/lib/hooks";
+import {usePlayers} from "@/lib/firebase/hooks";
 import Link from "next/link";
 import {ChevronRightIcon} from "lucide-react";
 

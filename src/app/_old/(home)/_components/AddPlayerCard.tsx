@@ -12,7 +12,7 @@ export default function AddPlayerCard() {
     const [name, setName] = useState('');
 
     const onAdd = async () => {
-        console.log('Adding player...');
+        console.log('Adding player.ts...');
         const n = name.trim();
         if (!n) {
             if (toast) toast.warning('Name required'); else alert('Enter name');

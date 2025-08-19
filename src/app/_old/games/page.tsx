@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Game, getGames, deleteGame, endGameAndSetPlayerTotals } from "@/models/game";
-import { usePlayers } from "@/lib/hooks";
+import { usePlayers } from "@/lib/firebase/hooks";
 import { Trash2Icon, PlayIcon } from "lucide-react";
 
 export default function AllGamesPage() {
@@ -38,7 +38,7 @@ export default function AllGamesPage() {
     };
 
     const handleEndGame = async (id: string) => {
-        if (confirm("End this game and update player totals?")) {
+        if (confirm("End this game and update player.ts totals?")) {
             await endGameAndSetPlayerTotals(id);
             fetchGames();
         }
