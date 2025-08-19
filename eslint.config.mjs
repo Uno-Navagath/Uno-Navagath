@@ -20,6 +20,7 @@ const eslintConfig = [
             "@next/next/no-img-element": "off",
             "jsx-a11y/alt-text": "off",
             "no-unused-expressions": "off",
+            "@typescript-eslint/no-unused-expressions": "off", // 👈 add this
         },
     },
 ];
